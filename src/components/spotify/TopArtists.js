@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from "react";
+import {Avatar, Grid, List, ListItem, ListItemText} from "@material-ui/core";
 
 
 const TopArtists = (props) => {
 	const [artistsCount, setArtistsCount] = useState(20);
 	const [topArtists, setTopArtists] = useState([]);
+	const [timeRange, setTimeRange] = useState("short_term");
 
 	useEffect(() => {
 		getTopArtists();
@@ -11,7 +13,7 @@ const TopArtists = (props) => {
 
 	const getTopArtists = () => {
 		const type = 'artists';
-		const URL = `https://api.spotify.com/v1/me/top/${type}?limit=${artistsCount}`;
+		const URL = `https://api.spotify.com/v1/me/top/${type}?limit=${artistsCount}&time_range=${timeRange}`;
 		fetch(URL, {
 			method: 'GET',
 			headers: {
@@ -32,9 +34,20 @@ const TopArtists = (props) => {
 		<div>
 			<h1>Top artists</h1>
 
-			{topArtists.map(
-				artist => (<p>{artist.name}</p>)
-			)}
+			<Grid container alignItems="center" justify="center">
+				<List>
+					{topArtists.map(
+						(artist, index) => (
+							<ListItem key={index}>
+								<ListItemText>{index + 1}.</ListItemText>
+								<ListItemText>{artist.name}</ListItemText>
+								<Avatar src={artist.images[0].url} variant="square"/>
+							</ListItem>
+						)
+					)}
+				</List>
+			</Grid>
+
 		</div>
 	)
 }

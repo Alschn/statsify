@@ -1,15 +1,18 @@
 import React, {useEffect, useState} from "react";
+import {Button} from "@material-ui/core";
 
 const Playlists = (props) => {
 	const [userPlaylists, setUserPlaylists] = useState([]);
+	const [playlistCount, setPlaylistCount] = useState(20);
+	const [nextPlaylists, setNextPlaylists] = useState("");
+
+	let URL = `https://api.spotify.com/v1/me/playlists?limit=${playlistCount}`;
 
 	useEffect(() => {
-		getUserPlaylists();
+		getUserPlaylists(URL);
 	}, [])
 
-	const getUserPlaylists = () => {
-		const playlistCount = 50; // up to 50
-		const url = `https://api.spotify.com/v1/me/playlists?limit=${playlistCount}`;
+	const getUserPlaylists = (url) => {
 		fetch(url,
 			{
 				method: 'GET',
@@ -23,9 +26,17 @@ const Playlists = (props) => {
 		).then(
 			data => {
 				console.log(data);
-				setUserPlaylists(data.items);
+				if (userPlaylists.length === 0) setUserPlaylists(data.items);
+				// else setUserPlaylists(prevState => [...prevState, ...data.items])
+
+				if (data.next) setNextPlaylists(data.next);
 			}
 		).catch(err => console.log(err))
+	}
+
+	const handleLoadMorePlaylists = () => {
+		if (!nextPlaylists) return;
+		// getUserPlaylists(url)
 	}
 
 	return (
@@ -33,8 +44,14 @@ const Playlists = (props) => {
 			<h1>Playlists</h1>
 
 			{userPlaylists.map(
-				(playlist) => (<p>{playlist.name}</p>)
+				(playlist, index) => (
+					<p key={index}>{playlist.name}</p>
+				)
 			)}
+
+			<Button variant="contained" color="primary" onClick={handleLoadMorePlaylists}>
+				Load more
+			</Button>
 		</div>
 	)
 }

@@ -9,7 +9,7 @@ import {
 	Select,
 	Avatar,
 	List,
-	ListItem, ListItemText
+	ListItem, ListItemText, Button
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -62,6 +62,10 @@ const TopTracks = (props) => {
 		).catch(err => console.log(err))
 	}
 
+	const handleLoadMoreTracks = () => {
+
+	}
+
 	return (
 		<div>
 			<h1>Top tracks</h1>
@@ -101,17 +105,20 @@ const TopTracks = (props) => {
 			</Grid>
 
 			<Grid container alignItems="center" justify="center">
-			<List>
-			{topTracks.map(
-				(track, index) => (
-					<ListItem>
-						<Avatar src={track.album.images[2].url} variant="square"/>
-						<ListItemText>{index + 1}. {track.name}</ListItemText>
-					</ListItem>
-				)
-			)}
-			</List>
+				<List>
+					{topTracks.map(
+						(track, index) => (
+							<ListItem key={index}>
+								<Avatar src={track.album.images[2].url} variant="square"/>
+								<ListItemText>{index + 1}. {track.name}</ListItemText>
+							</ListItem>
+						)
+					)}
+				</List>
 			</Grid>
+			<Button variant="contained" color="primary" onClick={handleLoadMoreTracks}>
+				Load more
+			</Button>
 		</div>
 	)
 }
