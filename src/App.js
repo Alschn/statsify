@@ -4,31 +4,34 @@ import {Scopes, SpotifyAuth} from "react-spotify-auth";
 import {SpotifyApiContext} from 'react-spotify-api';
 import Cookies from 'js-cookie';
 import 'react-spotify-auth/dist/index.css';
-import {Avatar} from "@material-ui/core";
+import {Avatar, Grid} from "@material-ui/core";
 import {
 	BrowserRouter as Router,
 	Switch,
 	Route,
-	Link,
 	Redirect
 } from "react-router-dom";
+import Navbar from "./components/layout/Navbar";
 import Playlists from "./components/spotify/Playlists";
 import TopTracks from "./components/spotify/TopTracks";
 import TopArtists from "./components/spotify/TopArtists";
 import RecentlyPlayed from "./components/spotify/RecentlyPlayed";
+import Saved from "./components/spotify/Saved";
+import FeaturedPlaylists from "./components/spotify/FeaturedPlaylists";
+import NewReleases from "./components/spotify/NewReleases";
 import {REDIRECT_URI, CLIENT_ID} from "./config";
 
 
 const App = () => {
 	const token = Cookies.get('spotifyAuthToken');
 	const [userData, setUserData] = useState({});
+	const BASE_URL = 'https://api.spotify.com/v1/me';
 
 	useEffect(() => {
 		getUserData()
 	}, [])
 
 	const getUserData = () => {
-		const BASE_URL = 'https://api.spotify.com/v1/me';
 		fetch(BASE_URL,
 			{
 				method: 'GET',
@@ -42,7 +45,6 @@ const App = () => {
 		).then(
 			data => {
 				const {display_name, id, email, images} = data;
-				console.log(data);
 				setUserData({name: display_name, id: id, email: email, image_url: images[0].url})
 			}
 		).catch(err => console.log(err))
@@ -51,6 +53,8 @@ const App = () => {
 	return (
 		<Router>
 			<div className='App'>
+				{token ? <Navbar/> : null}
+
 				<Switch>
 					<Route path="/playlists">
 						<Playlists token={token}/>
@@ -68,58 +72,61 @@ const App = () => {
 						<RecentlyPlayed token={token}/>
 					</Route>
 
+					<Route path="/saved-library">
+						<Saved token={token}/>
+					</Route>
+
+					<Route path="/featured-playlists">
+						<FeaturedPlaylists token={token}/>
+					</Route>
+
+					<Route path="/new-releases">
+						<NewReleases token={token}/>
+					</Route>
+
 					<Route path="/redirect">
 						<Redirect to="/"/>
 					</Route>
 
 					<Route exact path="/">
-						<div className='App-header'>
+						<div>
 							{token ? (
 								<SpotifyApiContext.Provider value={token}>
 
-									<nav>
-										<ul style={{listStyleType: "none"}}>
-											<li>
-												<Link to="/">Home</Link>
-											</li>
-											<li>
-												<Link to="/top-tracks">Your top tracks</Link>
-											</li>
-											<li>
-												<Link to="/top-artists">Your top artists</Link>
-											</li>
-											<li>
-												<Link to="/playlists">Your playlists</Link>
-											</li>
-											<li>
-												<Link to="/recently-played">Recently played tracks</Link>
-											</li>
-										</ul>
-									</nav>
-
 									<h6>Token: {token}</h6>
 
-									{Object.keys(userData).length !== 0 ?
-										(<div>
-											<Avatar src={userData.image_url}/>
-											{userData.name} {userData.id} {userData.email}
-										</div>) :
-										(<></>)
-									}
-
-
+									<Grid container direction="row" justify="center" alignItems="center" spacing={1}
+												className="App-header">
+										{Object.keys(userData).length !== 0 ?
+											(
+												<>
+													<Grid item>
+														<Avatar src={userData.image_url}/>
+													</Grid>
+													<Grid item>
+														{userData.name}
+													</Grid>
+												</>
+											)
+											:
+											null
+										}
+									</Grid>
 								</SpotifyApiContext.Provider>
 							) : (
-								<SpotifyAuth
-									redirectUri={REDIRECT_URI}
-									clientID={CLIENT_ID}
-									scopes={[
-										Scopes.userReadPrivate, Scopes.userReadEmail,
-										Scopes.userTopRead, Scopes.userReadRecentlyPlayed,
-										Scopes.playlistReadPrivate, Scopes.playlistReadCollaborative,
-									]}
-									title='Log in with Spotify'
-								/>
+								<div className="App-header">
+									<SpotifyAuth
+										redirectUri={REDIRECT_URI}
+										clientID={CLIENT_ID}
+										scopes={[
+											Scopes.userReadPrivate, Scopes.userReadEmail,
+											Scopes.userTopRead, Scopes.userReadRecentlyPlayed,
+											Scopes.userLibraryRead, Scopes.userLibraryModify,
+											Scopes.playlistReadPrivate, Scopes.playlistReadCollaborative,
+										]}
+										title='Log in with Spotify'
+									/>
+								</div>
 							)}
 
 						</div>

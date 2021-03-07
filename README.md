@@ -20,7 +20,7 @@
 
 #### Spotify Web API reference:
 
-https://developer.spotify.com/documentation/web-api/reference/
+https://developer.spotify.com/documentation/web-api/reference/  
 
 ## Config
 
@@ -46,10 +46,22 @@ npm start
 ```
 
 ## To-do list:
-
-- Saved tracks/albums (user's library)
 - Parsing data from request to custom objects (to store data inside state)
+- Paginating data from requests (if possible)
 - UI: navbar, maybe drawer and more (including styling existing components) ...
 - Fix useEffect warnings (dependencies array issue)
-- Maybe use Spotify Web Playback SDK in future
+- Fix redirect after logging in with Spotify 
+- Replace fetch api with axios, set default authorization headers
+- Replace code repeated in multiple places
 
+### Future content?
+- Maybe use Spotify Web Playback SDK
+- Maybe add Genius API to search for songs' lyrics
+
+## More possible features using Spotify API endpoints:
+- Get Recommendations 
+- Get User's Followed Artists
+- Get Audio Features for a Track (track's stats)
+- Get an Artist's Top Tracks
+- Get an Artist's Related Artists
+- Get an Artist's Albums
