@@ -8,8 +8,14 @@ import {
 	MenuItem,
 	Select,
 	Avatar,
-	List,
-	ListItem, ListItemText, Button
+	Button,
+	TableContainer,
+	Table,
+	TableHead,
+	TableRow,
+	TableCell,
+	TableBody,
+	Paper
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -21,6 +27,10 @@ const useStyles = makeStyles((theme) => ({
 	selectEmpty: {
 		marginTop: theme.spacing(2),
 	},
+	tableContainer: {
+		marginTop: 10,
+		marginBottom: 10,
+	},
 }));
 
 const TopTracks = (props) => {
@@ -29,6 +39,9 @@ const TopTracks = (props) => {
 	const [tracksCount, setTracksCount] = useState(20);
 	const [timeRange, setTimeRange] = useState('medium_term');
 	const [topTracks, setTopTracks] = useState([]);
+	const [nextPage, setNextPage] = useState(null);
+
+	const URL = `https://api.spotify.com/v1/me/top/tracks?limit=${tracksCount}&time_range=${timeRange}`;
 
 	const handleTracksCountChange = (event) => {
 		setTracksCount(event.target.value);
@@ -39,14 +52,15 @@ const TopTracks = (props) => {
 	};
 
 	useEffect(() => {
-		getTopTracks();
+		getTopTracks(URL);
+		return () => {
+			setTopTracks([]);
+			setNextPage(null);
+		}
 	}, [tracksCount, timeRange])
-	// fetchBusiness method??
 
-	const getTopTracks = () => {
-		const type = 'tracks';
-		const URL = `https://api.spotify.com/v1/me/top/${type}?limit=${tracksCount}&time_range=${timeRange}`;
-		fetch(URL, {
+	const getTopTracks = (url) => {
+		fetch(url, {
 			method: 'GET',
 			headers: {
 				'Authorization': `Bearer ${props.token}`,
@@ -57,13 +71,23 @@ const TopTracks = (props) => {
 		).then(
 			data => {
 				console.log(data);
-				setTopTracks(data.items);
+				if (topTracks.length === 0) setTopTracks(data.items);	// initial setter
+				else setTopTracks(prevState => [...prevState, ...data.items]);
+				setNextPage(data.next);
 			}
 		).catch(err => console.log(err))
 	}
 
 	const handleLoadMoreTracks = () => {
+		if (!nextPage) return;
+		getTopTracks(nextPage);
+	}
 
+	const getArtistsString = (artist) => {
+		let artists_string = '';
+		artist.map(
+			({name}, i, arr) => i !== arr.length - 1 ? artists_string += name + ', ' : artists_string += name);
+		return artists_string;
 	}
 
 	return (
@@ -87,7 +111,6 @@ const TopTracks = (props) => {
 						</Select>
 					</FormControl>
 
-
 					<FormControl className={classes.formControl}>
 						<InputLabel id="select-time-range-label">Time range</InputLabel>
 						<Select
@@ -105,17 +128,36 @@ const TopTracks = (props) => {
 			</Grid>
 
 			<Grid container alignItems="center" justify="center">
-				<List>
-					{topTracks.map(
-						(track, index) => (
-							<ListItem key={index}>
-								<Avatar src={track.album.images[2].url} variant="square"/>
-								<ListItemText>{index + 1}. {track.name}</ListItemText>
-							</ListItem>
-						)
-					)}
-				</List>
+				<Grid item xs={12} md={6} lg={6}>
+					<TableContainer component={Paper} className={classes.tableContainer}>
+						<Table aria-label="simple table">
+							<TableHead>
+								<TableRow>
+									<TableCell align="left"/>
+									<TableCell align="left">Track</TableCell>
+									<TableCell align="left"/>
+									<TableCell align="left">Artists</TableCell>
+								</TableRow>
+							</TableHead>
+							<TableBody>
+								{topTracks.map(({album, name, artists}, index) => (
+									<TableRow key={`${index+1}.${name}`}>
+										<TableCell component="th" scope="row" className={classes.indexColumn}>
+											{index + 1}.
+										</TableCell>
+										<TableCell align="left">
+											<Avatar src={album.images[2].url} variant="square"/>
+										</TableCell>
+										<TableCell align="left">{name}</TableCell>
+										<TableCell align="left">{getArtistsString(artists)}</TableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					</TableContainer>
+				</Grid>
 			</Grid>
+
 			<Button variant="contained" color="primary" onClick={handleLoadMoreTracks}>
 				Load more
 			</Button>
