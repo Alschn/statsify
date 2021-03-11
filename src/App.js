@@ -20,6 +20,7 @@ import Saved from "./components/spotify/Saved";
 import FeaturedPlaylists from "./components/spotify/FeaturedPlaylists";
 import NewReleases from "./components/spotify/NewReleases";
 import {REDIRECT_URI, CLIENT_ID} from "./config";
+import Search from "./components/spotify/Search";
 
 
 const App = () => {
@@ -82,6 +83,10 @@ const App = () => {
 
 					<Route path="/new-releases">
 						<NewReleases token={token}/>
+					</Route>
+
+					<Route path="/search">
+						<Search token={token}/>
 					</Route>
 
 					<Route path="/redirect">
