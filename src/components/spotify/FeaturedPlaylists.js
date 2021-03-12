@@ -35,8 +35,8 @@ const FeaturedPlaylists = (props) => {
 	return (
 		<div>
 			<h1>Featured playlists</h1>
-
-			<pre>{featuredPlaylists !== undefined ? JSON.stringify(featuredPlaylists, null, 2) : null}</pre>
+			<h1>{featuredPlaylists.message}</h1>
+			<pre>{featuredPlaylists ? JSON.stringify(featuredPlaylists, null, 2) : null}</pre>
 		</div>
 	);
 }

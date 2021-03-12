@@ -1,17 +1,14 @@
 import './App.css';
 import React, {useEffect, useState} from 'react'
 import {Scopes, SpotifyAuth} from "react-spotify-auth";
-import {SpotifyApiContext} from 'react-spotify-api';
 import Cookies from 'js-cookie';
 import 'react-spotify-auth/dist/index.css';
 import {Avatar, Grid} from "@material-ui/core";
 import {
 	BrowserRouter as Router,
 	Switch,
-	Route,
-	Redirect
+	Route, useHistory,
 } from "react-router-dom";
-import Navbar from "./components/layout/Navbar";
 import Playlists from "./components/spotify/Playlists";
 import TopTracks from "./components/spotify/TopTracks";
 import TopArtists from "./components/spotify/TopArtists";
@@ -21,16 +18,32 @@ import FeaturedPlaylists from "./components/spotify/FeaturedPlaylists";
 import NewReleases from "./components/spotify/NewReleases";
 import {REDIRECT_URI, CLIENT_ID} from "./config";
 import Search from "./components/spotify/Search";
+import RedirectHome from "./components/spotify/Redirect";
+import DrawerComponent from "./components/layout/Drawer";
+import ToolbarComponent from "./components/layout/Toolbar";
 
 
 const App = () => {
-	const token = Cookies.get('spotifyAuthToken');
+	let token = Cookies.get('spotifyAuthToken');
 	const [userData, setUserData] = useState({});
+	const [sidebar, setSidebar] = useState(false);
 	const BASE_URL = 'https://api.spotify.com/v1/me';
 
 	useEffect(() => {
-		getUserData()
+		token = Cookies.get('spotifyAuthToken');
+	})
+
+	useEffect(() => {
+		if (token) getUserData();
 	}, [])
+
+	const toggleDrawer = () => {
+		setSidebar(false);
+	}
+
+	const openDrawer = () => {
+		setSidebar(true);
+	}
 
 	const getUserData = () => {
 		fetch(BASE_URL,
@@ -54,7 +67,18 @@ const App = () => {
 	return (
 		<Router>
 			<div className='App'>
-				{token ? <Navbar/> : null}
+				{token ? (
+					<div>
+						<ToolbarComponent
+							openDrawerHandler={openDrawer}
+							userInfo={userData}
+						/>
+						<DrawerComponent
+							left={sidebar}
+							toggleDrawerHandler={toggleDrawer}
+						/>
+					</div>
+				) : null}
 
 				<Switch>
 					<Route path="/playlists">
@@ -90,14 +114,13 @@ const App = () => {
 					</Route>
 
 					<Route path="/redirect">
-						<Redirect to="/"/>
+						<RedirectHome/>
 					</Route>
 
 					<Route exact path="/">
 						<div>
 							{token ? (
-								<SpotifyApiContext.Provider value={token}>
-
+								<div>
 									<h6>Token: {token}</h6>
 
 									<Grid container direction="row" justify="center" alignItems="center" spacing={1}
@@ -117,7 +140,7 @@ const App = () => {
 											null
 										}
 									</Grid>
-								</SpotifyApiContext.Provider>
+								</div>
 							) : (
 								<div className="App-header">
 									<SpotifyAuth

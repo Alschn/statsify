@@ -8,15 +8,18 @@
     </p>
 </div>
 
-<p>My motivation behind this project is to get used to React's functional components, learn Hooks, use Material UI, build app in React without using any backend framework. The aim is also to make something useful for myself and my friends.
+<p>My motivation behind this project is to get used to React's functional components, learn Hooks, try out different Material UI components, build React app without using any backend framework. The aim is also to make something useful for myself and my friends.
 </p>
 
 ## Features
-
 - Top tracks
 - Top artists
 - User playlists
 - Recently played tracks
+- Saved tracks and albums
+- Featured playlists *
+- New releases *
+- Search for items *
 
 #### Spotify Web API reference:
 
@@ -24,7 +27,7 @@ https://developer.spotify.com/documentation/web-api/reference/
 
 ## Config
 
-Create .env file inside the root directory and set following variables:
+Create `.env` file inside the **root directory** and set following variables:
 
 ```shell
 REACT_APP_REDIRECT_URI='callback uri set in the spotify for developers dashboard'
@@ -47,12 +50,13 @@ npm start
 
 ## To-do list:
 - Parsing data from request to custom objects (to store data inside state)
-- Paginating data from requests (if possible)
-- UI: navbar, maybe drawer and more (including styling existing components) ...
+- Paginating data from requests (mostly done) 
+- Add infinite scroll (e.g to Saved tracks)
+- Add styles to every route
 - Fix useEffect warnings (dependencies array issue)
-- Fix redirect after logging in with Spotify 
-- Replace fetch api with axios, set default authorization headers
-- Replace code repeated in multiple places
+- Replace fetch api with axios 
+- Replace code repeated in multiple places (working on it)
+- Try to implement auto Spotify token refresh (or at least add token tracking and redirect to home)
 
 ### Future content?
 - Maybe use Spotify Web Playback SDK

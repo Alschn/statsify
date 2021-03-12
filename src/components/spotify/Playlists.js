@@ -4,12 +4,15 @@ import {Button} from "@material-ui/core";
 const Playlists = (props) => {
 	const [userPlaylists, setUserPlaylists] = useState([]);
 	const [playlistCount, setPlaylistCount] = useState(20);
-	const [nextPlaylists, setNextPlaylists] = useState("");
+	const [nextPlaylists, setNextPlaylists] = useState(null);
 
 	let URL = `https://api.spotify.com/v1/me/playlists?limit=${playlistCount}`;
 
 	useEffect(() => {
 		getUserPlaylists(URL);
+		return () => {
+			setNextPlaylists(null);
+		}
 	}, [])
 
 	const getUserPlaylists = (url) => {
@@ -27,16 +30,16 @@ const Playlists = (props) => {
 			data => {
 				console.log(data);
 				if (userPlaylists.length === 0) setUserPlaylists(data.items);
-				// else setUserPlaylists(prevState => [...prevState, ...data.items])
+				else setUserPlaylists(prevState => [...prevState, ...data.items])
 
-				if (data.next) setNextPlaylists(data.next);
+				setNextPlaylists(data.next);
 			}
 		).catch(err => console.log(err))
 	}
 
 	const handleLoadMorePlaylists = () => {
 		if (!nextPlaylists) return;
-		// getUserPlaylists(url)
+		getUserPlaylists(nextPlaylists);
 	}
 
 	return (
