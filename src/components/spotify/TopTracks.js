@@ -72,6 +72,17 @@ const TopTracks = (props) => {
 		setTimeRange(event.target.value);
 	};
 
+	const renderLoadMoreButton = () => (
+		nextPage ? (
+			<Button
+				variant="contained"
+				color="primary"
+				onClick={handleLoadMoreTracks}
+			>
+				Load more
+			</Button>
+		) : null
+	)
 
 	return (
 		<div>
@@ -116,10 +127,7 @@ const TopTracks = (props) => {
 					</TableContainer>
 				</Grid>
 			</Grid>
-
-			<Button variant="contained" color="primary" onClick={handleLoadMoreTracks}>
-				Load more
-			</Button>
+			{renderLoadMoreButton()}
 		</div>
 	)
 }

@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {Button} from "@material-ui/core";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const Playlists = (props) => {
 	const [userPlaylists, setUserPlaylists] = useState([]);
-	const [playlistCount, setPlaylistCount] = useState(20);
+	const [playlistCount, setPlaylistCount] = useState(30);
 	const [nextPlaylists, setNextPlaylists] = useState(null);
 
 	let URL = `https://api.spotify.com/v1/me/playlists?limit=${playlistCount}`;
@@ -12,6 +12,7 @@ const Playlists = (props) => {
 		getUserPlaylists(URL);
 		return () => {
 			setNextPlaylists(null);
+			setUserPlaylists([]);
 		}
 	}, [])
 
@@ -45,16 +46,19 @@ const Playlists = (props) => {
 	return (
 		<div>
 			<h1>Playlists</h1>
-
-			{userPlaylists.map(
-				(playlist, index) => (
-					<p key={index}>{playlist.name}</p>
-				)
-			)}
-
-			<Button variant="contained" color="primary" onClick={handleLoadMorePlaylists}>
-				Load more
-			</Button>
+			{/* Add styling later so that infinite scroll could work on higher resolution devices*/}
+			<InfiniteScroll
+				next={handleLoadMorePlaylists}
+				hasMore={nextPlaylists !== null}
+				loader={<h2>Loading more data...</h2>}
+				dataLength={userPlaylists.length}
+			>
+				{userPlaylists.map(
+					(playlist, index) => (
+						<p key={index + playlist.name}>{playlist.name}</p>
+					)
+				)}
+			</InfiniteScroll>
 		</div>
 	)
 }

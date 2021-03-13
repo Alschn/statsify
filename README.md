@@ -50,15 +50,16 @@ npm start
 
 ## To-do list:
 - Parsing data from request to custom objects (to store data inside state)
-- Paginating data from requests (mostly done) 
-- Add infinite scroll (e.g to Saved tracks)
-- Add styles to every route
+- Paginating data from requests (mostly done)
+- Add styles to every route 
+- Welcome and Homepage components
 - Fix useEffect warnings (dependencies array issue)
 - Replace fetch api with axios 
 - Replace code repeated in multiple places (working on it)
-- Try to implement auto Spotify token refresh (or at least add token tracking and redirect to home)
+- Try to implement auto Spotify token refresh (or at least auto logout)
 
 ### Future content?
+- More in depth statistics (calculated by analyzing data from multiple requests)
 - Maybe use Spotify Web Playback SDK
 - Maybe add Genius API to search for songs' lyrics
 
