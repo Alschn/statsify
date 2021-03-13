@@ -1,13 +1,11 @@
 import './App.css';
-import React, {useEffect, useState} from 'react'
-import {Scopes, SpotifyAuth} from "react-spotify-auth";
+import React, {useEffect, useState} from 'react';
 import Cookies from 'js-cookie';
 import 'react-spotify-auth/dist/index.css';
-import {Avatar, Grid} from "@material-ui/core";
 import {
 	BrowserRouter as Router,
 	Switch,
-	Route, useHistory,
+	Route,
 } from "react-router-dom";
 import Playlists from "./components/spotify/Playlists";
 import TopTracks from "./components/spotify/TopTracks";
@@ -16,11 +14,12 @@ import RecentlyPlayed from "./components/spotify/RecentlyPlayed";
 import Saved from "./components/spotify/Saved";
 import FeaturedPlaylists from "./components/spotify/FeaturedPlaylists";
 import NewReleases from "./components/spotify/NewReleases";
-import {REDIRECT_URI, CLIENT_ID} from "./config";
 import Search from "./components/spotify/Search";
 import RedirectHome from "./components/spotify/Redirect";
 import DrawerComponent from "./components/layout/Drawer";
 import ToolbarComponent from "./components/layout/Toolbar";
+import Homepage from "./components/layout/Homepage";
+import Welcome from "./components/layout/Welcome";
 
 
 const App = () => {
@@ -118,46 +117,15 @@ const App = () => {
 					</Route>
 
 					<Route exact path="/">
-						<div>
-							{token ? (
-								<div>
-									<h6>Token: {token}</h6>
+						{token ? (
+							<Homepage
+								token={token}
+								userData={userData}
+							/>
+						) : (
+							<Welcome/>
+						)}
 
-									<Grid container direction="row" justify="center" alignItems="center" spacing={1}
-												className="App-header">
-										{Object.keys(userData).length !== 0 ?
-											(
-												<>
-													<Grid item>
-														<Avatar src={userData.image_url}/>
-													</Grid>
-													<Grid item>
-														{userData.name}
-													</Grid>
-												</>
-											)
-											:
-											null
-										}
-									</Grid>
-								</div>
-							) : (
-								<div className="App-header">
-									<SpotifyAuth
-										redirectUri={REDIRECT_URI}
-										clientID={CLIENT_ID}
-										scopes={[
-											Scopes.userReadPrivate, Scopes.userReadEmail,
-											Scopes.userTopRead, Scopes.userReadRecentlyPlayed,
-											Scopes.userLibraryRead, Scopes.userLibraryModify,
-											Scopes.playlistReadPrivate, Scopes.playlistReadCollaborative,
-										]}
-										title='Log in with Spotify'
-									/>
-								</div>
-							)}
-
-						</div>
 					</Route>
 				</Switch>
 			</div>
