@@ -75,7 +75,7 @@ const Saved = (props) => {
 
 			<Grid item xs={6} lg={6}>
 				<h1>Saved tracks ({totalTracks}):</h1>
-				{tracks.map((track) => (<p>{track.track.name}</p>))}
+				{tracks.map(({track}) => (<p>{track.name}</p>))}
 			</Grid>
 		</Grid>
 	)

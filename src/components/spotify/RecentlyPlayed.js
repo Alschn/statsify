@@ -9,6 +9,12 @@ import {
 	TableContainer,
 	TableHead, TableRow
 } from "@material-ui/core";
+import {
+	getArtistsString,
+	getTrackLength,
+	getFormattedDate
+}
+from "../../utils/dataFormat";
 
 const useStyles = makeStyles({
 	tableContainer: {
@@ -57,21 +63,6 @@ const RecentlyPlayed = (props) => {
 	const handleLoadMoreTracks = () => {
 		if (!nextPage) return;
 		getRecentlyPlayedTracks(nextPage);
-	}
-
-	const getArtistsString = (artist) => {
-		let artists_string = '';
-		artist.map(
-			({name}, i, arr) => i !== arr.length - 1 ? artists_string += name + ', ' : artists_string += name);
-		return artists_string;
-	}
-
-	const getTrackLength = (length_ms) => {
-		return new Date(length_ms).toISOString().slice(14, 19);
-	}
-
-	const getFormattedDate = (date) => {
-		return new Date(date).toLocaleString();
 	}
 
 	return (

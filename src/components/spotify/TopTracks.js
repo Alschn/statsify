@@ -13,6 +13,7 @@ import {
 	Paper
 } from "@material-ui/core";
 import CustomSelect from "../utilities/CustomSelect";
+import {getArtistsString, getTrackLength} from "../../utils/dataFormat";
 
 const useStyles = makeStyles((theme) => ({
 	tableContainer: {
@@ -71,16 +72,6 @@ const TopTracks = (props) => {
 		setTimeRange(event.target.value);
 	};
 
-	const getArtistsString = (artist) => {
-		let artists_string = '';
-		artist.map(
-			({name}, i, arr) => i !== arr.length - 1 ? artists_string += name + ', ' : artists_string += name);
-		return artists_string;
-	}
-
-	const getTrackLength = (length_ms) => {
-		return new Date(length_ms).toISOString().slice(14, 19);
-	}
 
 	return (
 		<div>
