@@ -8,23 +8,26 @@
     </p>
 </div>
 
-<p>My motivation behind this project is to get used to React's functional components, learn Hooks, use Material UI, build app in React without using any backend framework. The aim is also to make something useful for myself and my friends.
+<p>My motivation behind this project is to get used to React's functional components, learn Hooks, try out different Material UI components, build React app without using any backend framework. The aim is also to make something useful for myself and my friends.
 </p>
 
 ## Features
-
 - Top tracks
 - Top artists
 - User playlists
 - Recently played tracks
+- Saved tracks and albums
+- Featured playlists *
+- New releases *
+- Search for items *
 
 #### Spotify Web API reference:
 
-https://developer.spotify.com/documentation/web-api/reference/
+https://developer.spotify.com/documentation/web-api/reference/  
 
 ## Config
 
-Create .env file inside the root directory and set following variables:
+Create `.env` file inside the **root directory** and set following variables:
 
 ```shell
 REACT_APP_REDIRECT_URI='callback uri set in the spotify for developers dashboard'
@@ -46,10 +49,25 @@ npm start
 ```
 
 ## To-do list:
-
-- Saved tracks/albums (user's library)
 - Parsing data from request to custom objects (to store data inside state)
-- UI: navbar, maybe drawer and more (including styling existing components) ...
+- Paginating data from requests (mostly done)
+- Add styles to every route 
+- Welcome and Homepage components
 - Fix useEffect warnings (dependencies array issue)
-- Maybe use Spotify Web Playback SDK in future
+- Replace fetch api with axios 
+- Replace code repeated in multiple places (working on it)
+- Try to implement auto Spotify token refresh (or at least auto logout)
+- Prevent fetching data on reload (unless it's intended)
 
+### Future content?
+- More in depth statistics (calculated by analyzing data from multiple requests)
+- Maybe use Spotify Web Playback SDK
+- Maybe add Genius API to search for songs' lyrics
+
+## More possible features using Spotify API endpoints:
+- Get Recommendations 
+- Get User's Followed Artists
+- Get Audio Features for a Track (track's stats)
+- Get an Artist's Top Tracks
+- Get an Artist's Related Artists
+- Get an Artist's Albums

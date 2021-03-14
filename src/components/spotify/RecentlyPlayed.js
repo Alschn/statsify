@@ -1,17 +1,47 @@
 import React, {useEffect, useState} from "react";
+import {
+	Avatar,
+	Button,
+	Grid,
+	makeStyles,
+	Paper,
+	Table, TableBody, TableCell,
+	TableContainer,
+	TableHead, TableRow
+} from "@material-ui/core";
+import {
+	getArtistsString,
+	getTrackLength,
+	getFormattedDate
+}
+from "../../utils/dataFormat";
 
+const useStyles = makeStyles({
+	tableContainer: {
+		marginTop: 10,
+		marginBottom: 10,
+	},
+});
 
 const RecentlyPlayed = (props) => {
+	const classes = useStyles();
+
 	const [recentTracks, setRecentTracks] = useState([]);
 	const [tracksCount, setTracksCount] = useState(20);
+	const [nextPage, setNextPage] = useState(null);
+
+	const URL = `https://api.spotify.com/v1/me/player/recently-played?limit=${tracksCount}`;
 
 	useEffect(() => {
-		getRecentlyPlayedTracks()
+		getRecentlyPlayedTracks(URL);
+		return () => {
+			setNextPage(null);
+			setRecentTracks([]);
+		}
 	}, [tracksCount])
 
-	const getRecentlyPlayedTracks = () => {
-		const URL = `https://api.spotify.com/v1/me/player/recently-played?limit=${tracksCount}`;
-		fetch(URL, {
+	const getRecentlyPlayedTracks = (url) => {
+		fetch(url, {
 			method: 'GET',
 			headers: {
 				'Authorization': `Bearer ${props.token}`,
@@ -22,15 +52,63 @@ const RecentlyPlayed = (props) => {
 		).then(
 			data => {
 				console.log(data);
-				setRecentTracks(data.items);
+				if (recentTracks.length === 0) setRecentTracks(data.items);	// initial setter
+				else setRecentTracks(prevState => [...prevState, ...data.items]);
+
+				setNextPage(data.next);
 			}
 		).catch(err => console.log(err))
+	}
+
+	const handleLoadMoreTracks = () => {
+		if (!nextPage) return;
+		getRecentlyPlayedTracks(nextPage);
 	}
 
 	return (
 		<div>
 			<h1>Recently played</h1>
-			{recentTracks.map(({track}) => (<p>{track.name}</p>))}
+			<h3>🔄 Refresh page to fetch current data</h3>
+			<Grid container alignItems="center" justify="center">
+				<Grid item xs={12} md={8} lg={6}>
+					<TableContainer component={Paper} className={classes.tableContainer}>
+						<Table aria-label="simple table" size="small">
+							<TableHead>
+								<TableRow>
+									<TableCell align="left"/>
+									<TableCell align="left">Track</TableCell>
+									<TableCell align="left"/>
+									<TableCell align="left">Album</TableCell>
+									<TableCell align="left">Artists</TableCell>
+									<TableCell align="left">Length</TableCell>
+									<TableCell align="left">Last played</TableCell>
+								</TableRow>
+							</TableHead>
+							<TableBody>
+								{recentTracks.map(({track, played_at}, index) => (
+									<TableRow key={`${index + 1}.${track.name}`}>
+										<TableCell component="th" scope="row">
+											{index + 1}.
+										</TableCell>
+										<TableCell align="left">
+											<Avatar src={track.album.images[2].url} variant="square"/>
+										</TableCell>
+										<TableCell align="left">{track.name}</TableCell>
+										<TableCell align="left">{track.album.name}</TableCell>
+										<TableCell align="left">{getArtistsString(track.artists)}</TableCell>
+										<TableCell align="left">{getTrackLength(track.duration_ms)}</TableCell>
+										<TableCell align="left">{getFormattedDate(played_at)}</TableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					</TableContainer>
+				</Grid>
+			</Grid>
+
+			<Button variant="contained" color="primary" onClick={handleLoadMoreTracks}>
+				Load more
+			</Button>
 		</div>
 	)
 }
