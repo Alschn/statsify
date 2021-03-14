@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useState} from "react";
+import {Card, Grid, Paper} from "@material-ui/core";
 
 // query parameters: locale, country, limit, offset
 
@@ -21,8 +22,9 @@ const FeaturedPlaylists = (props) => {
 			response => response.json()
 		).then(
 			data => {
-				// console.log(data);
-				setFeaturedPlaylists(data);
+				console.log(data);
+				const {playlists: {items}} = data;
+				setFeaturedPlaylists(items);
 			}
 		).catch(err => console.log(err))
 	}, [props.token, URL])
@@ -33,11 +35,34 @@ const FeaturedPlaylists = (props) => {
 
 
 	return (
-		<div>
-			<h1>Featured playlists</h1>
-			<h1>{featuredPlaylists.message}</h1>
-			<pre>{featuredPlaylists ? JSON.stringify(featuredPlaylists, null, 2) : null}</pre>
-		</div>
+		<Grid container justify="center">
+			<Grid item xs={12}>
+				<h1>Featured playlists</h1>
+				<h1>{featuredPlaylists.message}</h1>
+			</Grid>
+
+			<Grid item xs={12} lg={6} container direction="column" spacing={1}>
+				<Grid
+					container
+					justify="center"
+					alignItems="center"
+					direction="row"
+					spacing={2}
+				>
+					{featuredPlaylists.map(({name, description, images}, index) => (
+						<Grid item key={index + name}>
+							<Card style={{maxWidth: 200}}>
+								<img src={images[0].url} alt="" height={200} width={200}/>
+								<p>{name}</p>
+								<p>{description}</p>
+							</Card>
+						</Grid>
+					))}
+				</Grid>
+			</Grid>
+
+			{/*<pre>{featuredPlaylists ? JSON.stringify(featuredPlaylists, null, 2) : null}</pre>*/}
+		</Grid>
 	);
 }
 

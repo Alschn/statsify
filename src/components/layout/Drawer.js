@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Component} from "react";
 import Drawer from "@material-ui/core/Drawer";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {
@@ -23,8 +23,8 @@ const routes = [
 	{endpoint: "/", desc: "Home", icon: <HomeIcon/>},
 	{endpoint: "/top-tracks", desc: "Your top tracks", icon: <TrendingUpIcon/>},
 	{endpoint: "/top-artists", desc: "Your top artists", icon: <RecordVoiceOverIcon/>},
-	{endpoint: "/saved-library", desc: "Saved tracks and albums", icon: <AlbumIcon/>},
 	{endpoint: "/playlists", desc: "Your playlists", icon: <QueueMusicIcon/>},
+	{endpoint: "/saved-library", desc: "Saved tracks and albums", icon: <AlbumIcon/>},
 	{endpoint: "/recently-played", desc: "Recently played tracks", icon: <SpeakerIcon/>},
 	{endpoint: "/featured-playlists", desc: "Featured playlists", icon: <FeaturedPlayListIcon/>},
 	{endpoint: "/new-releases", desc: "New releases", icon: <NewReleasesIcon/>},
@@ -40,7 +40,7 @@ const styles = theme => ({
 	}
 });
 
-class DrawerComponent extends React.Component {
+class DrawerComponent extends Component {
 	state = {
 		left: false
 	};

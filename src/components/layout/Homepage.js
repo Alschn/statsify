@@ -4,7 +4,6 @@ import {Avatar, Grid} from "@material-ui/core";
 const Homepage = (props) => {
 	return (
 		<div>
-			<h6>Token: {props.token}</h6>
 			<Grid container
 						direction="row"
 						justify="center"
@@ -14,14 +13,9 @@ const Homepage = (props) => {
 			>
 				{Object.keys(props.userData).length !== 0 ?
 					(
-						<div>
-							<Grid item>
-								<Avatar src={props.userData.image_url}/>
-							</Grid>
-							<Grid item>
-								{props.userData.name}
-							</Grid>
-						</div>
+						<Grid item>
+							{props.userData.name}
+						</Grid>
 					)
 					:
 					null

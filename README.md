@@ -57,6 +57,7 @@ npm start
 - Replace fetch api with axios 
 - Replace code repeated in multiple places (working on it)
 - Try to implement auto Spotify token refresh (or at least auto logout)
+- Prevent fetching data on reload (unless it's intended)
 
 ### Future content?
 - More in depth statistics (calculated by analyzing data from multiple requests)
