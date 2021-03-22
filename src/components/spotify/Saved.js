@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {
-	Avatar,
 	Button,
 	Card,
 	FormControl,
@@ -12,13 +11,15 @@ import {
 } from "@material-ui/core";
 import {
 	getArtistsString,
-	getFormattedDate,
 	getTrackLength
 } from "../../utils/dataFormat";
 import {makeStyles} from "@material-ui/core/styles";
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import TodayIcon from '@material-ui/icons/Today';
 import InfiniteScroll from "react-infinite-scroll-component";
+import TimeAgo from 'javascript-time-ago';
+import en from 'javascript-time-ago/locale/en'
+
 
 const useStyles = makeStyles({
 	topBox: {
@@ -45,6 +46,10 @@ const Saved = (props) => {
 
 	let albumsCount = 10;
 	let tracksCount = 20;
+
+	useEffect(() => {
+		TimeAgo.addDefaultLocale(en);
+	}, [])
 
 	useEffect(() => {
 		getItems(selectType);
@@ -101,6 +106,12 @@ const Saved = (props) => {
 		}
 	}
 
+	const getTimePassedSinceAdded = (added_at) => {
+		const timeAgo = new TimeAgo('en-US');
+		const diff = Date.now() - new Date(added_at);
+		return timeAgo.format(Date.now() - diff)
+	}
+
 	return (
 		<Grid container justify="center">
 			<Grid item xs={12} className={classes.topBox}>
@@ -150,11 +161,13 @@ const Saved = (props) => {
 						</Grid>
 					</Grid>
 
-					<Grid container justify="center" className={classes.buttonBox}>
-						<Button variant="contained" color="primary">
-							Load more
-						</Button>
-					</Grid>
+					{nextAlbums && (
+						<Grid container justify="center" className={classes.buttonBox}>
+							<Button variant="contained" color="primary">
+								Load more
+							</Button>
+						</Grid>
+					)}
 				</>
 
 			) : (
@@ -180,14 +193,14 @@ const Saved = (props) => {
 									</TableRow>
 								</TableHead>
 								<TableBody>
-									{tracks.map(({track, added_at}, index) => (
-										<TableRow key={`${index + 1}.${track.name}`}>
+									{tracks.map(({track: {name, album, artists, duration_ms}, added_at}, index) => (
+										<TableRow key={`${index + 1}.${name}`}>
 											<TableCell component="th" scope="row"/>
-											<TableCell align="left">{track.name}</TableCell>
-											<TableCell align="left">{getArtistsString(track.artists)}</TableCell>
-											<TableCell align="left">{track.album.name}</TableCell>
-											<TableCell align="left">{getFormattedDate(added_at)}</TableCell>
-											<TableCell align="left">{getTrackLength(track.duration_ms)}</TableCell>
+											<TableCell align="left">{name}</TableCell>
+											<TableCell align="left">{getArtistsString(artists)}</TableCell>
+											<TableCell align="left">{album.name}</TableCell>
+											<TableCell align="left">{getTimePassedSinceAdded(added_at)}</TableCell>
+											<TableCell align="left">{getTrackLength(duration_ms)}</TableCell>
 										</TableRow>
 									))}
 								</TableBody>

@@ -12,6 +12,3 @@ export const getFormattedDate = (date) => {
 	return new Date(date).toLocaleString();
 }
 
-export const getAddedAtFormattedDate = (added_at) => {
-	// to do
-}
