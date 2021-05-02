@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import {Grid} from "@material-ui/core";
 
 
 const NewReleases = (props) => {
@@ -19,7 +20,10 @@ const NewReleases = (props) => {
 		).then(
 			data => {
 				console.log(data);
-				setNewAlbums(data);
+				const {
+					albums: {items, artists, total_tracks}
+				} = data;
+				setNewAlbums(items);
 			}
 		).catch(
 			err => console.log(err)
@@ -29,6 +33,13 @@ const NewReleases = (props) => {
 	return (
 		<div>
 			<h1>New releases</h1>
+			<Grid container>
+				{newAlbums.map(({name}, index) => (
+					<Grid item xs={12} key={index + name}>
+						<p>{name}</p>
+					</Grid>
+				))}
+			</Grid>
 
 			<pre>{JSON.stringify(newAlbums, null, 2)}</pre>
 		</div>

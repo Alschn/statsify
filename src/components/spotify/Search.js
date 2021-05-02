@@ -1,27 +1,16 @@
 import React, {useState} from "react";
 import axios from "axios";
 import TextField from '@material-ui/core/TextField';
-import {makeStyles} from '@material-ui/core/styles';
-import {Button, Checkbox, FormControlLabel, FormGroup, Grid, Snackbar} from "@material-ui/core";
+import {Grid, Snackbar} from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 import CheckboxGroup from "../utilities/CheckboxGroup";
 
-
-const useStyles = makeStyles((theme) => ({
-	root: {
-		width: '100%',
-		'& > * + *': {
-			marginTop: theme.spacing(2),
-		},
-	},
-}));
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const Search = (props) => {
-	const classes = useStyles();
 	const [currentQuery, setCurrentQuery] = useState("");
 	const [resultsCount, setResultsCount] = useState(5);
 	const [results, setResults] = useState({});
