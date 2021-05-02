@@ -12,6 +12,7 @@
 </p>
 
 ## Features
+
 - Top tracks
 - Top artists
 - User playlists
@@ -23,7 +24,7 @@
 
 #### Spotify Web API reference:
 
-https://developer.spotify.com/documentation/web-api/reference/  
+https://developer.spotify.com/documentation/web-api/reference/
 
 ## Config
 
@@ -49,23 +50,26 @@ npm start
 ```
 
 ## To-do list:
+
 - Parsing data from request to custom objects (to store data inside state)
 - Paginating data from requests (mostly done)
-- Add styles to every route 
+- Add styles to every route
 - Welcome and Homepage components
 - Fix useEffect warnings (dependencies array issue)
-- Replace fetch api with axios 
+- Replace fetch api with axios and set default headers
 - Replace code repeated in multiple places (working on it)
 - Try to implement auto Spotify token refresh (or at least auto logout)
 - Prevent fetching data on reload (unless it's intended)
 
 ### Future content?
+
 - More in depth statistics (calculated by analyzing data from multiple requests)
 - Maybe use Spotify Web Playback SDK
 - Maybe add Genius API to search for songs' lyrics
 
 ## More possible features using Spotify API endpoints:
-- Get Recommendations 
+
+- Get Recommendations
 - Get User's Followed Artists
 - Get Audio Features for a Track (track's stats)
 - Get an Artist's Top Tracks
