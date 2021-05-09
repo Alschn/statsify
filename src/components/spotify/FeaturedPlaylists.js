@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {Card, Grid} from "@material-ui/core";
+import axiosInstance from "../../utils/axiosInstance";
 
 // query parameters: locale, country, limit, offset
 
@@ -12,22 +13,14 @@ const FeaturedPlaylists = (props) => {
   const URL = `https://api.spotify.com/v1/browse/featured-playlists?limit=${playlistCount}`;
 
   const getFeaturedPlaylists = useCallback(() => {
-    fetch(URL, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${props.token}`,
-        'Content-Type': 'application/json'
-      },
-    }).then(
-      response => response.json()
-    ).then(
-      data => {
-        console.log(data);
-        const {playlists: {items}} = data;
+    axiosInstance.get(URL).then(
+      response => {
+        console.log(response.data);
+        const {playlists: {items}} = response.data;
         setFeaturedPlaylists(items);
       }
     ).catch(err => console.log(err))
-  }, [props.token, URL])
+  }, [URL])
 
   useEffect(() => {
     getFeaturedPlaylists();

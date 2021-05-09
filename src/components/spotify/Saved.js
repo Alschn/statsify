@@ -21,6 +21,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import TodayIcon from '@material-ui/icons/Today';
 import InfiniteScroll from "react-infinite-scroll-component";
+import axiosInstance from "../../utils/axiosInstance";
 
 
 const useStyles = makeStyles({
@@ -69,25 +70,18 @@ const Saved = (props) => {
   const getItems = (type) => {
     const count = type === "tracks" ? tracksCount : albumsCount;
     const URL = `https://api.spotify.com/v1/me/${type}?limit=${count}`;
-    fetch(URL, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${props.token}`,
-        'Content-Type': 'application/json'
-      },
-    }).then(
-      response => response.json()
-    ).then(
-      data => {
-        console.log(data);
+    axiosInstance.get(URL).then(
+      response => {
+        console.log(response.data);
+        const {items, total, next} = response.data;
         if (type === "tracks") {
-          setTracks(data.items);
-          setTotalTracks(data.total);
-          setNextTracks(data.next);
+          setTracks(items);
+          setTotalTracks(total);
+          setNextTracks(next);
         } else {
-          setAlbums(data.items);
-          setTotalAlbums(data.total);
-          setNextAlbums(data.next);
+          setAlbums(items);
+          setTotalAlbums(total);
+          setNextAlbums(next);
         }
       }
     ).catch(err => console.log(err))
@@ -99,24 +93,17 @@ const Saved = (props) => {
 
   const loadMoreTracks = () => {
     if (nextTracks) {
-      fetch(nextTracks.toString(), {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${props.token}`,
-          'Content-Type': 'application/json'
-        },
-      }).then(
-        response => response.json()
-      ).then(
-        data => {
-          console.log(data, "Next data");
-          setTracks(prevState => [...prevState, ...data.items]);
-          setNextTracks(data.next);
+      axiosInstance.get(nextTracks.toString()).then(
+        response => {
+          console.log(response.data, "Next data");
+          const {items, next} = response.data;
+          setTracks(prevState => [...prevState, ...items]);
+          setNextTracks(next);
         }
       ).catch(err => console.log(err))
     }
   }
-  
+
   return (
     <Grid container justify="center">
       <Grid item xs={12} className={classes.topBox}>

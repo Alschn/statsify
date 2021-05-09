@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {Grid} from "@material-ui/core";
+import axiosInstance from "../../utils/axiosInstance";
 
 
-const Playlists = (props) => {
+const Playlists = () => {
   const [userPlaylists, setUserPlaylists] = useState([]);
   const [nextPlaylists, setNextPlaylists] = useState(null);
 
@@ -19,23 +20,12 @@ const Playlists = (props) => {
   }, [])
 
   const getUserPlaylists = (url) => {
-    fetch(url,
-      {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${props.token}`,
-          'Content-Type': 'application/json'
-        },
-      }
-    ).then(
-      response => response.json()
-    ).then(
-      data => {
-        console.log(data);
-        if (userPlaylists.length === 0) setUserPlaylists(data.items);
-        else setUserPlaylists(prevState => [...prevState, ...data.items])
-
-        setNextPlaylists(data.next);
+    axiosInstance.get(url).then(
+      response => {
+        const {items, next} = response.data;
+        if (userPlaylists.length === 0) setUserPlaylists(items);
+        else setUserPlaylists(prevState => [...prevState, ...items])
+        setNextPlaylists(next);
       }
     ).catch(err => console.log(err))
   }

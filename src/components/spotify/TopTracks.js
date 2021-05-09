@@ -14,6 +14,7 @@ import {
 } from "@material-ui/core";
 import CustomSelect from "../utilities/CustomSelect";
 import {getArtistsString, getTrackLength} from "../../utils/dataFormat";
+import axiosInstance from "../../utils/axiosInstance";
 
 const useStyles = makeStyles((theme) => ({
   tableContainer: {
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TopTracks = (props) => {
+const TopTracks = () => {
   const classes = useStyles();
 
   const [tracksCount, setTracksCount] = useState(20);
@@ -41,20 +42,13 @@ const TopTracks = (props) => {
   }, [tracksCount, timeRange])
 
   const getTopTracks = (url) => {
-    fetch(url, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${props.token}`,
-        'Content-Type': 'application/json'
-      },
-    }).then(
-      response => response.json()
-    ).then(
-      data => {
-        console.log(data);
-        if (topTracks.length === 0) setTopTracks(data.items);	// initial setter
-        else setTopTracks(prevState => [...prevState, ...data.items]);
-        setNextPage(data.next);
+    axiosInstance.get(url).then(
+      response => {
+        console.log(response.data);
+        const {items, next} = response.data;
+        if (topTracks.length === 0) setTopTracks(items);	// initial setter
+        else setTopTracks(prevState => [...prevState, ...items]);
+        setNextPage(next);
       }
     ).catch(err => console.log(err))
   }

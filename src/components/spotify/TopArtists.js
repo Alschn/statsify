@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {Avatar, Button, Grid, List, ListItem, ListItemText} from "@material-ui/core";
 import CustomSelect from "../utilities/CustomSelect";
+import axiosInstance from "../../utils/axiosInstance";
 
 
-const TopArtists = (props) => {
+const TopArtists = () => {
   const [topArtists, setTopArtists] = useState([]);
   const [artistsCount, setArtistsCount] = useState(20);
   const [timeRange, setTimeRange] = useState("short_term");
@@ -15,18 +16,11 @@ const TopArtists = (props) => {
   const getTopArtists = () => {
     const type = 'artists';
     const URL = `https://api.spotify.com/v1/me/top/${type}?limit=${artistsCount}&time_range=${timeRange}`;
-    fetch(URL, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${props.token}`,
-        'Content-Type': 'application/json'
-      },
-    }).then(
-      response => response.json()
-    ).then(
-      data => {
-        console.log(data);
-        setTopArtists(data.items);
+    axiosInstance.get(URL).then(
+      response => {
+        console.log(response.data);
+        const {items} = response.data;
+        setTopArtists(items);
       }
     ).catch(err => console.log(err))
   }

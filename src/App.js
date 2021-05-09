@@ -16,16 +16,17 @@ import DrawerComponent from "./components/layout/Drawer";
 import ToolbarComponent from "./components/layout/Toolbar";
 import Homepage from "./components/layout/Homepage";
 import Welcome from "./components/layout/Welcome";
+import axiosInstance from "./utils/axiosInstance";
+import {BASE_URL} from "./config";
 
 
 const App = () => {
   let token = Cookies.get('spotifyAuthToken');
   const [userData, setUserData] = useState({});
   const [sidebar, setSidebar] = useState(false);
-  const BASE_URL = 'https://api.spotify.com/v1/me';
 
   useEffect(() => {
-    token = Cookies.get('spotifyAuthToken');
+    token = Cookies.get('spotifyAuthToken');  // to be replaced
   })
 
   useEffect(() => {
@@ -41,20 +42,10 @@ const App = () => {
   }
 
   const getUserData = () => {
-    fetch(BASE_URL,
-      {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-      }
-    ).then(
-      response => response.json()
-    ).then(
-      data => {
-        const {display_name, id, email, images} = data;
-        setUserData({name: display_name, id: id, email: email, image_url: images[0].url})
+    axiosInstance.get(BASE_URL).then(
+      response => {
+        const {display_name, id, email, images: [img]} = response.data;
+        setUserData({name: display_name, id: id, email: email, image_url: img.url})
       }
     ).catch(err => console.log(err))
   }
@@ -77,35 +68,35 @@ const App = () => {
 
         <Switch>
           <Route path="/playlists">
-            <Playlists token={token}/>
+            <Playlists/>
           </Route>
 
           <Route path="/top-tracks">
-            <TopTracks token={token}/>
+            <TopTracks/>
           </Route>
 
           <Route path="/top-artists">
-            <TopArtists token={token}/>
+            <TopArtists/>
           </Route>
 
           <Route path="/recently-played">
-            <RecentlyPlayed token={token}/>
+            <RecentlyPlayed/>
           </Route>
 
           <Route path="/saved-library">
-            <Saved token={token}/>
+            <Saved/>
           </Route>
 
           <Route path="/featured-playlists">
-            <FeaturedPlaylists token={token}/>
+            <FeaturedPlaylists/>
           </Route>
 
           <Route path="/new-releases">
-            <NewReleases token={token}/>
+            <NewReleases/>
           </Route>
 
           <Route path="/search">
-            <Search token={token}/>
+            <Search/>
           </Route>
 
           <Route path="/redirect">
@@ -115,7 +106,6 @@ const App = () => {
           <Route exact path="/">
             {token ? (
               <Homepage
-                token={token}
                 userData={userData}
               />
             ) : (
