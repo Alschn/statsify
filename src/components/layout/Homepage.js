@@ -1,7 +1,7 @@
 import React from "react";
 import {Grid} from "@material-ui/core";
 
-const Homepage = (props) => {
+const Homepage = ({userData}) => {
   return (
     <Grid container
           direction="row"
@@ -9,10 +9,10 @@ const Homepage = (props) => {
           alignItems="center"
           spacing={1}
     >
-      {Object.keys(props.userData).length !== 0 &&
+      {Object.keys(userData).length !== 0 &&
       (
         <Grid item>
-          {props.userData.name}
+          {userData.name}
         </Grid>
       )
       }

@@ -1,9 +1,7 @@
 import React from "react";
 import {capitalize, Checkbox, FormControlLabel, FormGroup} from "@material-ui/core";
 
-const CheckboxGroup = (props) => {
-  const {options, handler} = props;
-
+const CheckboxGroup = ({options, handler}) => {
   return (
     <FormGroup row>
       {Object.entries(options).map(([key, value]) => (
