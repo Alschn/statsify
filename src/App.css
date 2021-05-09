@@ -1,3 +1,9 @@
+:root {
+    --spotifyGreen: #1DB954;
+    --spotifyLightGreen: #1ED760;
+    --spotifyGray: #191414;
+}
+
 .App {
     text-align: center;
     overflow-x: hidden;
@@ -5,13 +11,14 @@
 }
 
 .App-header {
-    /*min-height: 100vh;*/
+    min-height: 100vh;
     display: flex;
-    /*flex-direction: column;*/
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     font-size: calc(10px + 2vmin);
-    color: black;
+    color: white;
+    background-color: var(--spotifyGreen);
 }
 
 a {
